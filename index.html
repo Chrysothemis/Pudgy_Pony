@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<head>	
+	<script type="text/javascript" src="crafty.js"></script>
+    <link rel="stylesheet" type="text/css" href="site.css" />
+    <link rel="stylesheet" type="text/css" href="960/reset.css" />
+    <link rel="stylesheet" type="text/css" href="960/text.css" />
+    <link rel="stylesheet" type="text/css" href="960/960.css" />
+</head>
+<body>
+ <div id="Everything_Box" class="container_12">
+    <div " class="grid_12">
+       <p id="logo"><p>
+      
+    </div>
+    <div id="main_game_div" class="grid_12" style="text-align: center;">
+    
+        <div id="cr-stage">
+<script type="text/javascript">
+
+            var width = 940;
+            Crafty.init(width, 680);
+            var p = 0;
+            var color = 'rgb(255,0,0)'; 
+            
+            //turn the sprite maps into usable components
+            Crafty.sprite(20, "pony.png", {
+                pony: [0, 0],
+                rev_pony:[0,1]
+            });
+            
+            Crafty.sprite(20, "rainbow.png", {
+                prize: [0, 0]
+            });
+            
+            Crafty.sprite(20, "warp.png", {
+                warp: [0, 0]
+            });
+            
+            Crafty.sprite(20, "cloud_a.png", {
+                cloud_begin: [0, 0]
+            });            
+            Crafty.sprite(20, "cloud_b.png", {
+                cloud_piece: [0, 0]
+            });
+            Crafty.sprite(20, "cloud_c.png", {
+                cloud_end: [0, 0]
+            });            
+            Crafty.sprite(20, "sprites_1.png", {
+                inbrick: [0, 0],
+                brick: [1, 0],
+                window:[0, 1],
+                roof1:[0,2,2,1],
+                roof2:[0,3,2,1],
+                roof3:[0,4],
+                door:[0,5,1,2],
+                indoor:[1,5,1,2],
+            });
+
+            
+            Crafty.scene("loading", function () {
+                //load takes an array of assets and a callback when complete
+                Crafty.load(["pony.png", "bg.png", "sprites_1.png"], function () {
+                    Crafty.scene("main"); //when everything is loaded, run the main scene
+                });
+            
+                //black background with some loading text
+                //Crafty.background("#000");
+                Crafty.e("2D, DOM, Text").attr({ w: 100, h: 20, x: 150, y: 120 })
+                    .text("Loading")
+                    .css({ "text-align": "center" });
+            });
+            
+            //automatically play the loading scene
+            Crafty.scene("loading");
+
+            Crafty.scene("main", function () {
+                Crafty.background( Crafty.e("2D, DOM, Image").image("bg.png"));
+                
+                //Score Display
+                 Crafty.e("Message, DOM, 2D, Text")
+                    .attr({ x: 800, y: 50 ,  w:100, h:20, z:10000})
+                    .text(''+ p)
+                    .bind("EnterFrame", function () {
+                            this.text(p);
+                    })
+                    
+                    
+                //Mover
+                Crafty.c("Mover" ,{
+                    init: function(){
+                        this.requires('SpriteAnimation');
+                    },
+
+                    
+                        walk: function(){
+                            //if(!this.isPlaying())
+                            if( Crafty.math.randomInt(0, 5) < this.speed){
+                                if(this.dX == 1 ){
+                                    this.animate('right', 3);
+                                }else{
+                                    this.animate('left', 3);
+                                }
+                                if(this.x > (width-20) || this.x < 9){
+                                    this.turnAround();
+                                }
+                                else{
+                                     if( Crafty.math.randomInt(0, 100) < this.turnFactor){
+                                        this.turnAround();
+                                     }else{
+                                        this.x = this.x + this.dX;
+                                    }
+                                }
+                            }
+                        },
+                        
+                    turnAround: function(){
+                            this.dX *= -1;
+                            this.x = this.x + this.dX;
+                    }
+                
+                });
+                
+                //Floor            
+                Crafty.e("Floor, 2D, DOM, Color, Solid, SuperSolid")
+                    .attr({x: 10, y: 650, w: width-19, h: 20 })
+                    .color("cyan")
+                    
+                    
+                //Platforms
+                var px = 50;
+                var py = 50;
+                var v = false;
+                var total_center_tiles = 6;
+                
+                Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_begin, Solid, SuperSolid")
+                        .attr({x: px, y: py, w: 20, h: 20 })
+                if(v)    
+                        {py = py + 20;}
+                    else 
+                        {px = px + 20;}
+                for(i=0; i < total_center_tiles; i++){
+                    Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_piece, Solid, SuperSolid")
+                        .attr({x: px, y: py, w: 20, h: 20 })
+                    if(v)    
+                        {py = py + 20;}
+                    else 
+                        {px = px + 20;}
+                }
+                Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_end, Solid, SuperSolid")
+                        .attr({x: px, y: py, w: 20, h: 20 })
+                
+                //Platforms 2
+                Crafty.e("Cloud, 2D, DOM, Color, Solid, SuperSolid")//1
+                    .attr({x: 200, y: 600, w: 400, h: 20 })
+                    .color("cyan")
+                    
+                Crafty.e("Cloud, 2D, DOM, Color, Solid, SuperSolid") //2
+                    .attr({x: 700, y: 500, w: 100, h: 20 })
+                    .color("cyan")
+                    
+                 Crafty.e("Cloud, 2D, DOM, Color, Solid, SuperSolid") //6
+                    .attr({x: 25, y: 100, w: 20, h: 100 })
+                    .color("cyan")    
+                    
+                Crafty.e("Cloud, 2D, DOM, Color, Solid, SuperSolid")//5
+                    .attr({x: 250, y: 120, w: 20, h: 200 })
+                    .color("cyan")
+                    
+                Crafty.e("Cloud, 2D, DOM, Color, Solid, SuperSolid")//3
+                    .attr({x: 500, y: 400, w: 100, h: 20 })
+                    .color("cyan")
+                    
+                 Crafty.e("Cloud, 2D, DOM, Color, Solid, SuperSolid")//4
+                    .attr({x: 400, y: 300, w: 300, h: 20 })
+                    .color("cyan")
+                    
+                //Prizes
+                 Crafty.e("Prize, prize, 2D, DOM")
+                    .attr({x: 50, y: 300, w: 45, h: 27})
+                    
+                    
+                 Crafty.e("Prize, prize, 2D, DOM")
+                    .attr({x: 500, y: 100, w: 45, h: 27 })
+                                      
+
+                //Warp
+                Crafty.e("Warp, warp, 2D, DOM, SpriteAnimation ")
+                    .attr({x: 20, y: 20, w: 36, h: 44 })
+                       
+                    
+                    
+                    
+                //Pony
+                Crafty.e("Brush, 2D, DOM, Multiway, Gravity, Solid, pony, SpriteAnimation, SuperSolid, Collision")
+                    .attr({ x: 50, y: 400, w: 20, h: 20, z:100000, dX: 1})
+                    .multiway(5, { UP_ARROW: -90, DOWN_ARROW: 90, LEFT_ARROW: 180, RIGHT_ARROW: 0 })
+                    .gravity("Solid")
+                    .animate('right', 0, 0, 2)
+                    .animate('left', 0, 1, 2)
+                    .bind('EnterFrame', function () {
+                       // hit floor or roof
+                        if (this.y <= 20 )
+                            this.y = 20;
+                        if (this.y >= 860 )
+                            this.y = 860;
+                        if (this.x <= 20 )
+                            this.x = 20;
+                        if (this.x >= 909)
+                            this.x = 909;
+                             
+                        if(this.dX == 1 ){
+                            this.animate('right', 3);
+                        }else if (this.dX == -1 ){
+                            this.animate('left', 3);
+                        }
+                        
+                    })
+                        
+
+                    .bind("KeyDown", function (e) {
+                       if (e.key == Crafty.keys['LEFT_ARROW'] ){
+                                this.dX = -1;
+                        }else if (e.key == Crafty.keys['RIGHT_ARROW'] ){
+                                this.dX = 1;
+                        }else{
+                                //this.dX = 0;
+                        }
+                    })
+                     .onHit("Prize", function(){
+                        p = p + 50;
+                       // Crafty("Message").text("" + p);        
+                    })
+                     .onHit("Warp", function(){
+                        p = p + 1000;
+                        //Crafty("Message").text(" You finished the level!");         
+                    })
+            })
+            
+            
+            
+
+          
+        
+</script>
+        </div>
+    </div>
+    
+    </div>
+ </div>
+</body>
+</html>
