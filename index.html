@@ -21,6 +21,9 @@
             Crafty.init(width, 680);
             var p = 0;
             var color = 'rgb(255,0,0)'; 
+            var current_level = '6sx200y600L20v0x700y500L5v0x20y100L5v1x250y120L10v1x500y400L5v0x400y300L15v0x';
+            
+            
             
             //turn the sprite maps into usable components
             Crafty.sprite(20, "pony.png", {
@@ -126,53 +129,41 @@
                     .color("cyan")
                     
                     
-                //Platforms
-                var px = 50;
-                var py = 50;
-                var v = false;
-                var total_center_tiles = 6;
-                
-                Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_begin, Solid, SuperSolid")
-                        .attr({x: px, y: py, w: 20, h: 20 })
-                if(v)    
-                        {py = py + 20;}
-                    else 
-                        {px = px + 20;}
-                for(i=0; i < total_center_tiles; i++){
-                    Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_piece, Solid, SuperSolid")
-                        .attr({x: px, y: py, w: 20, h: 20 })
+                //Clouds
+                          
+                for(total_clouds = parseInt(current_level.charAt(0)); total_clouds > 0; total_clouds--){
+                        px = parseInt(current_level.substring(current_level.indexOf('x') + 1, current_level.indexOf('y')))
+                            console.log(px);
+                        py = parseInt(current_level.substring(current_level.indexOf('y') + 1 , current_level.indexOf('L')))
+                            console.log(py);
+                        total_center_tiles = parseInt(current_level.substring(current_level.indexOf('L') +1 , current_level.indexOf('v'))) -2;
+                            console.log(total_center_tiles);
+                        v = parseInt( parseInt(current_level.substring(current_level.indexOf('v') +1 , current_level.indexOf('v')+2)));
+                            console.log(v);
+                        current_level = current_level.substr(current_level.indexOf('v' + v + 'x') + 2)
+                            console.log(current_level);
+
+                    
+                    
+                    
+                    Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_begin, Solid, SuperSolid")
+                            .attr({x: px, y: py, w: 20, h: 20 })
                     if(v)    
-                        {py = py + 20;}
-                    else 
-                        {px = px + 20;}
+                            {py = py + 20;}
+                        else 
+                            {px = px + 20;}
+                    for(i=0; i < total_center_tiles; i++){
+                        Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_piece, Solid, SuperSolid")
+                            .attr({x: px, y: py, w: 20, h: 20 })
+                        if(v)    
+                            {py = py + 20;}
+                        else 
+                            {px = px + 20;}
+                    }
+                    Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_end, Solid, SuperSolid")
+                            .attr({x: px, y: py, w: 20, h: 20 })
+                        
                 }
-                Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_end, Solid, SuperSolid")
-                        .attr({x: px, y: py, w: 20, h: 20 })
-                
-                //Platforms 2
-                Crafty.e("Cloud, 2D, DOM, Color, Solid, SuperSolid")//1
-                    .attr({x: 200, y: 600, w: 400, h: 20 })
-                    .color("cyan")
-                    
-                Crafty.e("Cloud, 2D, DOM, Color, Solid, SuperSolid") //2
-                    .attr({x: 700, y: 500, w: 100, h: 20 })
-                    .color("cyan")
-                    
-                 Crafty.e("Cloud, 2D, DOM, Color, Solid, SuperSolid") //6
-                    .attr({x: 25, y: 100, w: 20, h: 100 })
-                    .color("cyan")    
-                    
-                Crafty.e("Cloud, 2D, DOM, Color, Solid, SuperSolid")//5
-                    .attr({x: 250, y: 120, w: 20, h: 200 })
-                    .color("cyan")
-                    
-                Crafty.e("Cloud, 2D, DOM, Color, Solid, SuperSolid")//3
-                    .attr({x: 500, y: 400, w: 100, h: 20 })
-                    .color("cyan")
-                    
-                 Crafty.e("Cloud, 2D, DOM, Color, Solid, SuperSolid")//4
-                    .attr({x: 400, y: 300, w: 300, h: 20 })
-                    .color("cyan")
                     
                 //Prizes
                  Crafty.e("Prize, prize, 2D, DOM")
