@@ -47,7 +47,17 @@
             });
             Crafty.sprite(20, "cloud_c.png", {
                 cloud_end: [0, 0]
+            }); 
+
+            Crafty.sprite(20, "cloud_va.png", {
+                cloud_vbegin: [0, 0]
             });            
+            Crafty.sprite(20, "cloud_vb.png", {
+                cloud_vpiece: [0, 0]
+            });
+            Crafty.sprite(20, "cloud_vc.png", {
+                cloud_vend: [0, 0]
+            });             
             Crafty.sprite(20, "sprites_1.png", {
                 inbrick: [0, 0],
                 brick: [1, 0],
@@ -132,36 +142,46 @@
                 //Clouds
                           
                 for(total_clouds = parseInt(current_level.charAt(0)); total_clouds > 0; total_clouds--){
-                        px = parseInt(current_level.substring(current_level.indexOf('x') + 1, current_level.indexOf('y')))
-                            console.log(px);
-                        py = parseInt(current_level.substring(current_level.indexOf('y') + 1 , current_level.indexOf('L')))
-                            console.log(py);
-                        total_center_tiles = parseInt(current_level.substring(current_level.indexOf('L') +1 , current_level.indexOf('v'))) -2;
-                            console.log(total_center_tiles);
-                        v = parseInt( parseInt(current_level.substring(current_level.indexOf('v') +1 , current_level.indexOf('v')+2)));
-                            console.log(v);
-                        current_level = current_level.substr(current_level.indexOf('v' + v + 'x') + 2)
-                            console.log(current_level);
+                    px = parseInt(current_level.substring(current_level.indexOf('x') + 1, current_level.indexOf('y')))
+                        console.log(px);
+                    py = parseInt(current_level.substring(current_level.indexOf('y') + 1 , current_level.indexOf('L')))
+                        console.log(py);
+                    total_center_tiles = parseInt(current_level.substring(current_level.indexOf('L') +1 , current_level.indexOf('v'))) -2;
+                        console.log(total_center_tiles);
+                    v = parseInt( parseInt(current_level.substring(current_level.indexOf('v') +1 , current_level.indexOf('v')+2)));
+                        console.log(v);
+                    current_level = current_level.substr(current_level.indexOf('v' + v + 'x') + 2)
+                        console.log(current_level);
 
                     
                     
-                    
-                    Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_begin, Solid, SuperSolid")
+                    if(v)  {
+                        Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_vbegin, Solid, SuperSolid")
                             .attr({x: px, y: py, w: 20, h: 20 })
-                    if(v)    
-                            {py = py + 20;}
-                        else 
-                            {px = px + 20;}
-                    for(i=0; i < total_center_tiles; i++){
-                        Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_piece, Solid, SuperSolid")
-                            .attr({x: px, y: py, w: 20, h: 20 })
-                        if(v)    
-                            {py = py + 20;}
-                        else 
-                            {px = px + 20;}
+                       py = py + 20;
+
+                        for(i=0; i < total_center_tiles; i++){
+                            Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_vpiece, Solid, SuperSolid")
+                                .attr({x: px, y: py, w: 20, h: 20 })  
+                            py = py + 20;
+                        }
+                        Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_vend, Solid, SuperSolid")
+                                .attr({x: px, y: py, w: 20, h: 20 })
                     }
-                    Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_end, Solid, SuperSolid")
+                    else{
+                        Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_begin, Solid, SuperSolid")
                             .attr({x: px, y: py, w: 20, h: 20 })
+                        px = px + 20;
+                        for(i=0; i < total_center_tiles; i++){
+                            Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_piece, Solid, SuperSolid")
+                                .attr({x: px, y: py, w: 20, h: 20 })
+                            px = px + 20;
+                        }
+                        Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_end, Solid, SuperSolid")
+                            .attr({x: px, y: py, w: 20, h: 20 })
+                   }
+
+
                         
                 }
                     
