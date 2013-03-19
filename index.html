@@ -21,9 +21,10 @@
             Crafty.init(width, 680);
             var p = 0;
             var color = 'rgb(255,0,0)'; 
-            var current_level = '6sx200y600L20v0x700y500L5v0x20y100L5v1x250y120L10v1x500y400L5v0x400y300L15v0x';
-            
-            
+            var current_level='';
+            //var current_level = '6sx200y600L20v0x700y500L5v0x20y100L5v1x250y120L10v1x500y400L5v0x400y300L15v0x';
+            //var level2 = '7sx200y600L10v0x700y400L5v0x20y100L5v1x250y120L5v1x500y400L10v0x400y300L10v0x450y200L5v0x';
+            var my_level = 0;
             
             //turn the sprite maps into usable components
             Crafty.sprite(20, "pony.png", {
@@ -89,6 +90,8 @@
             Crafty.scene("main", function () {
                 Crafty.background( Crafty.e("2D, DOM, Image").image("bg.png"));
                 
+               
+                
                 //Score Display
                  Crafty.e("Message, DOM, 2D, Text")
                     .attr({ x: 800, y: 50 ,  w:100, h:20, z:10000})
@@ -140,57 +143,78 @@
                     
                     
                 //Clouds
-                          
-                for(total_clouds = parseInt(current_level.charAt(0)); total_clouds > 0; total_clouds--){
-                    px = parseInt(current_level.substring(current_level.indexOf('x') + 1, current_level.indexOf('y')))
-                        console.log(px);
-                    py = parseInt(current_level.substring(current_level.indexOf('y') + 1 , current_level.indexOf('L')))
-                        console.log(py);
-                    total_center_tiles = parseInt(current_level.substring(current_level.indexOf('L') +1 , current_level.indexOf('v'))) -2;
-                        console.log(total_center_tiles);
-                    v = parseInt( parseInt(current_level.substring(current_level.indexOf('v') +1 , current_level.indexOf('v')+2)));
-                        console.log(v);
-                    current_level = current_level.substr(current_level.indexOf('v' + v + 'x') + 2)
-                        console.log(current_level);
-
-                    
-                    
-                    if(v)  {
-                        Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_vbegin, Solid, SuperSolid")
-                            .attr({x: px, y: py, w: 20, h: 20 })
-                       py = py + 20;
-
-                        for(i=0; i < total_center_tiles; i++){
-                            Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_vpiece, Solid, SuperSolid")
-                                .attr({x: px, y: py, w: 20, h: 20 })  
-                            py = py + 20;
-                        }
-                        Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_vend, Solid, SuperSolid")
-                                .attr({x: px, y: py, w: 20, h: 20 })
-                    }
-                    else{
-                        Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_begin, Solid, SuperSolid")
-                            .attr({x: px, y: py, w: 20, h: 20 })
-                        px = px + 20;
-                        for(i=0; i < total_center_tiles; i++){
-                            Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_piece, Solid, SuperSolid")
-                                .attr({x: px, y: py, w: 20, h: 20 })
-                            px = px + 20;
-                        }
-                        Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_end, Solid, SuperSolid")
-                            .attr({x: px, y: py, w: 20, h: 20 })
-                   }
-
-
+                Crafty.c("Cloud_Creator", {
+                    init: function(){
                         
-                }
+                    },
                     
+                    refresh_level: function(){
+                        Crafty("Cloud").each( function () {this.destroy();})
+                        //console.log('my_level_1');
+                        //console.log(my_level);
+                        if (my_level ==0){
+                            current_level = '6sx200y600L20v0x700y500L5v0x20y100L5v1x250y120L10v1x500y400L5v0x400y300L15v0x';
+                        }else{
+                            current_level = '7sx200y600L10v0x700y400L5v0x20y100L5v1x250y120L5v1x500y400L10v0x400y300L10v0x450y200L5v0x';
+                        }
+
+                        if (current_level.charAt(0) != 'x'){
+                            total_clouds = parseInt(current_level.charAt(0));
+                            for(; total_clouds > 0; total_clouds--){
+                                px = parseInt(current_level.substring(current_level.indexOf('x') + 1, current_level.indexOf('y')))
+                                    //console.log(px);
+                                py = parseInt(current_level.substring(current_level.indexOf('y') + 1 , current_level.indexOf('L')))
+                                   // console.log(py);
+                                total_center_tiles = parseInt(current_level.substring(current_level.indexOf('L') +1 , current_level.indexOf('v'))) -2;
+                                   // console.log(total_center_tiles);
+                                v = parseInt( parseInt(current_level.substring(current_level.indexOf('v') +1 , current_level.indexOf('v')+2)));
+                                    //console.log(v);
+                                current_level = current_level.substr(current_level.indexOf('v' + v + 'x') + 2)
+                                   // console.log(current_level);
+
+                                
+                                
+                                if(v)  {
+                                    Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_vbegin, Solid, SuperSolid")
+                                        .attr({x: px, y: py, w: 20, h: 20 })
+                                   py = py + 20;
+
+                                    for(i=0; i < total_center_tiles; i++){
+                                        Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_vpiece, Solid, SuperSolid")
+                                            .attr({x: px, y: py, w: 20, h: 20 })  
+                                        py = py + 20;
+                                    }
+                                    Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_vend, Solid, SuperSolid")
+                                            .attr({x: px, y: py, w: 20, h: 20 })
+                                }
+                                else{
+                                    Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_begin, Solid, SuperSolid")
+                                        .attr({x: px, y: py, w: 20, h: 20 })
+                                    px = px + 20;
+                                    for(i=0; i < total_center_tiles; i++){
+                                        Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_piece, Solid, SuperSolid")
+                                            .attr({x: px, y: py, w: 20, h: 20 })
+                                        px = px + 20;
+                                    }
+                                    Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_end, Solid, SuperSolid")
+                                        .attr({x: px, y: py, w: 20, h: 20 })
+                               }
+
+
+                                    
+                            }
+                        }
+                    },
+                });
+                Crafty.e("Cloud_Creator")
+                 Crafty("Cloud_Creator").refresh_level();
+                
                 //Prizes
-                 Crafty.e("Prize, prize, 2D, DOM")
+                Crafty.e("Prize, prize, 2D, DOM")
                     .attr({x: 50, y: 300, w: 45, h: 27})
                     
                     
-                 Crafty.e("Prize, prize, 2D, DOM")
+                Crafty.e("Prize, prize, 2D, DOM")
                     .attr({x: 500, y: 100, w: 45, h: 27 })
                                       
 
@@ -239,10 +263,12 @@
                     })
                      .onHit("Prize", function(){
                         p = p + 50;
+                        console.log('p' + p);
                        // Crafty("Message").text("" + p);        
                     })
                      .onHit("Warp", function(){
-                        p = p + 1000;
+                        my_level = my_level+1;
+                        Crafty("Cloud_Creator").refresh_level();
                         //Crafty("Message").text(" You finished the level!");         
                     })
             })
