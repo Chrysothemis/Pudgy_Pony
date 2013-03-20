@@ -23,7 +23,7 @@
             var color = 'rgb(255,0,0)'; 
             var current_level='';
             //var current_level = '6sx200y600L20v0x700y500L5v0x20y100L5v1x250y120L10v1x500y400L5v0x400y300L15v0x';
-            //var level2 = '7sx200y600L10v0x700y400L5v0x20y100L5v1x250y120L5v1x500y400L10v0x400y300L10v0x450y200L5v0x';
+            //var level2 = '7sx200y600L10v0x700y500L5v0x20y100L5v1x250y120L5v1x500y400L10v0x400y300L10v0x450y200L5v0x';
             var my_level = 0;
             
             //turn the sprite maps into usable components
@@ -32,7 +32,7 @@
                 rev_pony:[0,1]
             });
             
-            Crafty.sprite(20, "rainbow.png", {
+            Crafty.sprite(20, "sparkle.png", {
                 prize: [0, 0]
             });
             
@@ -153,13 +153,32 @@
                         //console.log('my_level_1');
                         //console.log(my_level);
                         if (my_level ==0){
-                            current_level = '6sx200y600L20v0x700y500L5v0x20y100L5v1x250y120L10v1x500y400L5v0x400y300L15v0x';
+                            current_level = '1x200y200c6x200y600L20v0x700y500L5v0x20y100L5v1x250y120L10v1x500y400L5v0x400y300L15v0x';
                         }else{
-                            current_level = '7sx200y600L10v0x700y400L5v0x20y100L5v1x250y120L5v1x500y400L10v0x400y300L10v0x450y200L5v0x';
+                            current_level = '2x200y200cx300y300c7x400y600L10v0x700y500L5v0x20y100L5v1x250y120L5v1x500y400L10v0x400y300L10v0x450y200L5v0x';
                         }
 
+                        //Create the Prizes
                         if (current_level.charAt(0) != 'x'){
-                            total_clouds = parseInt(current_level.charAt(0));
+                             total_prizes = parseInt(current_level.charAt(0));
+                            for(; total_prizes > 0; total_prizes--){
+                                prize_x = parseInt(current_level.substring(current_level.indexOf('x') + 1, current_level.indexOf('y')));
+                                   // console.log(prize_x);
+                                prize_y = parseInt(current_level.substring(current_level.indexOf('y') + 1 , current_level.indexOf('c')));
+                                    //console.log(prize_y);
+                                current_level = current_level.substr(current_level.indexOf('c') +1);
+                                    //console.log(current_level);
+                                    
+                                Crafty.e("Prize, prize, 2D, DOM, Collision")
+                                    .attr({x: prize_x, y: prize_y, w: 45, h: 27})
+                                    .onHit("P_Pony", function(){
+                                        this.destroy();
+                                    })
+                            }
+                            
+                            //Create the Clouds
+                            total_clouds = parseInt(current_level.substring(0, current_level.indexOf('x')));
+                             //console.log(total_clouds);
                             for(; total_clouds > 0; total_clouds--){
                                 px = parseInt(current_level.substring(current_level.indexOf('x') + 1, current_level.indexOf('y')))
                                     //console.log(px);
@@ -198,7 +217,7 @@
                                     }
                                     Crafty.e("Cloud, 2D, DOM, SpriteAnimation, cloud_end, Solid, SuperSolid")
                                         .attr({x: px, y: py, w: 20, h: 20 })
-                               }
+                                }
 
 
                                     
@@ -209,15 +228,19 @@
                 Crafty.e("Cloud_Creator")
                  Crafty("Cloud_Creator").refresh_level();
                 
-                //Prizes
-                Crafty.e("Prize, prize, 2D, DOM")
+                /*Prizes
+                Crafty.e("Prize, prize, 2D, DOM, Collision")
                     .attr({x: 50, y: 300, w: 45, h: 27})
+                    .onHit("P_Pony", function(){
+                        this.destroy();
+                    })
                     
-                    
-                Crafty.e("Prize, prize, 2D, DOM")
-                    .attr({x: 500, y: 100, w: 45, h: 27 })
-                                      
-
+                Crafty.e("Prize, prize, 2D, DOM,  Collision")
+                    .attr({x: 500, y: 230, w: 45, h: 27 })
+                    .onHit("P_Pony", function(){
+                        this.destroy();
+                    })                 
+                */
                 //Warp
                 Crafty.e("Warp, warp, 2D, DOM, SpriteAnimation ")
                     .attr({x: 20, y: 20, w: 36, h: 44 })
@@ -226,7 +249,7 @@
                     
                     
                 //Pony
-                Crafty.e("Brush, 2D, DOM, Multiway, Gravity, Solid, pony, SpriteAnimation, SuperSolid, Collision")
+                Crafty.e("P_Pony, 2D, DOM, Multiway, pony, Gravity, Solid, SpriteAnimation, SuperSolid, Collision")
                     .attr({ x: 50, y: 400, w: 20, h: 20, z:100000, dX: 1})
                     .multiway(5, { UP_ARROW: -90, DOWN_ARROW: 90, LEFT_ARROW: 180, RIGHT_ARROW: 0 })
                     .gravity("Solid")
@@ -263,12 +286,16 @@
                     })
                      .onHit("Prize", function(){
                         p = p + 50;
-                        console.log('p' + p);
-                       // Crafty("Message").text("" + p);        
+       
                     })
                      .onHit("Warp", function(){
                         my_level = my_level+1;
+
+                        console.log(this.y)
+
                         Crafty("Cloud_Creator").refresh_level();
+                        this.y = 600;
+                        this.x = 50;
                         //Crafty("Message").text(" You finished the level!");         
                     })
             })
