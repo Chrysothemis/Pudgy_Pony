@@ -121,9 +121,12 @@
                             current_level = '1x200y200c8x10y850L46v0x350y700L5v1x200y600L20v0x700y500L5v0x20y100L5v1x250y120L10v1x500y400L5v0x400y300L15v0x';
                         }else if (my_level ==1) {
                             current_level = '2x200y200cx300y300c9x10y850L46v0x350y700L5v1x400y600L10v0x700y500L5v0x20y100L5v1x250y120L5v1x500y400L10v0x400y300L10v0x450y200L5v0x';
-                        } else{
+                        } else if (my_level ==2){
                             current_level = '3x100y250cx300y700cx800y350c10x9y850L46v0x100y750L5v0x350y500L15v1x400y200L10v0x600y400L5v0x20y400L5v1x250y120L5v1x500y400L10v0x400y500L10v0x500y300L5v0x';
+                        }else{
+                            current_level = '4x500y310cx620y310cx730y310cx830y310c7x94y758L14v0x184y400L8v0x430y550L15v0x144y308L5v1x391y445L5v1x528y690L4v1x10y850L46v0x';
                         }
+                        
 
                         //Create the Warp
                         Crafty.e("Warp, warp, 2D, DOM, SpriteAnimation ")

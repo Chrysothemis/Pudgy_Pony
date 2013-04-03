@@ -186,18 +186,18 @@
                  Crafty("Cloud_Creator").refresh_level();
                 
                 
-                            Crafty.e('2D, DOM, Color,  Solid, SuperSolid, Mouse')
-                                .color("blue")
-                                .attr({
-                                w: 20,
-                                h: 20,
-                                x: this.x,
-                                y: this.y
-                                })
-                                .bind("Click", function () {
-                                   console.log('p');
-                                   this.w = 50;
-                                })
+                /*Crafty.e('Tester, 2D, DOM, Color,  Solid, SuperSolid, Mouse, ')
+                    .color("blue")
+                    .attr({
+                    w: 20,
+                    h: 20,
+                    x: 0,
+                    y: 0
+                    })
+                    .bind("Click", function () {
+                       console.log('p');
+                       this.w = 50;
+                    })*/
                 
                 Crafty.e("Brush, 2D, DOM, Color, Multiway")
                     .color(color)
@@ -208,8 +208,8 @@
 
                     .bind("KeyDown", function (e) {
                         if (e.key == Crafty.keys['ENTER'] ){    
-                            Crafty.e('2D, DOM, Color, Collision, Solid, SuperSolid, Mouse')
-                                .color("blue")
+                            Crafty.e('H_Cloud, 2D, DOM, Color,  Solid, SuperSolid, Mouse, Draggable')
+                                .color("green")
                                 .attr({
                                 w: 20,
                                 h: 20,
@@ -217,11 +217,52 @@
                                 y: this.y
                                 })
                                 .bind("Click", function () {
-                                   console.log('p');
+                                   //console.log('g');
+                                   this.w += 20;
                                 })
+                                .bind('MouseDown', function(e) {
+                                    if( e.mouseButton == Crafty.mouseButtons.RIGHT )
+                                        this.startDrag();
+                                })
+                                .bind('MouseUp', function(e) {
+                                    if( e.mouseButton == Crafty.mouseButtons.RIGHT )
+                                       this.stopDrag();
+                                })
+                            }else if(e.key == Crafty.keys['SPACE'] ){    
+                                Crafty.e('V_Cloud, 2D, DOM, Color,  Solid, SuperSolid, Mouse, Draggable')
+                                    .color("blue")
+                                    .attr({
+                                    w: 20,
+                                    h: 20,
+                                    x: this.x,
+                                    y: this.y
+                                    })
+                                    .bind("Click", function () {
+                                       //console.log('g');
+                                       this.h += 20;
+                                    })
+                                    .bind('MouseDown', function(e) {
+                                        if( e.mouseButton == Crafty.mouseButtons.RIGHT )
+                                            this.startDrag();
+                                    })
+                                    .bind('MouseUp', function(e) {
+                                        if( e.mouseButton == Crafty.mouseButtons.RIGHT )
+                                           this.stopDrag();
+                                    })
+   
+                            }else if(e.key == Crafty.keys['P'] ){    
+                                Crafty.e('Prize_Place, 2D, DOM, Color, Mouse, Draggable')
+                                    .color("pink")
+                                    .attr({
+                                    w: 20,
+                                    h: 20,
+                                    x: this.x,
+                                    y: this.y
+                                    })
 
-                                
-                                
+   
+                            }else if(e.key == Crafty.keys['E'] ){    
+                                Crafty("Level_exporter").export_level();
                             }/*else if (e.key == Crafty.keys['W'] ){
                                     this.y = this.y - 20;
                             }else if (e.key == Crafty.keys['S'] ){
@@ -281,19 +322,39 @@
                         p = p + 50;
        
                     })
-                     .onHit("Warp", function(){
-                        my_level = my_level+1;
-
-                        console.log(my_level)
-
-                        Crafty("Cloud_Creator").refresh_level();
-                        this.y = 600;
-                        this.x = 50;
-                        //Crafty("Message").text(" You finished the level!");         
-                    })
+                           
             })
             
-            
+            Crafty.c("Level_exporter", {
+                    init: function(){
+                        
+                    },
+                    
+                    export_level: function(){
+                    var total_ps = 0 ;
+                    var total_cs = 0;
+                    var c_data = '';
+                    var p_data = '';
+                    
+                    Crafty("Prize_Place").each( function () {                     
+                        total_ps++;
+                        p_data = p_data + 'x' +  this.x + 'y' +  this.y + 'c';
+                    })
+                    Crafty("H_Cloud").each( function () {                     
+                        total_cs++;
+                        c_data = c_data +  'x' +  this.x +'y' +  this.y + 'L' + ((this.w/20)) + 'v0';
+                    })
+                    Crafty("V_Cloud").each( function () {                     
+                        total_cs++;
+                        c_data = c_data +  'x' +  this.x +'y' +  this.y + 'L' + ((this.h/20)) + 'v1';
+                    })
+                    
+                    console.log(total_ps + p_data + (total_cs+1) + c_data + 'x10y850L46v0x');
+                    
+                    //'Example level: 2x200y200cx300y300c9x10y850L46v0x350y700L5v1x400y600L10v0x700y500L5v0x20y100L5v1x250y120L5v1x500y400L10v0x400y300L10v0x450y200L5v0x';
+                }
+            })
+            Crafty.e("Level_exporter")
             
 
           
